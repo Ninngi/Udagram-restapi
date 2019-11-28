@@ -2,6 +2,8 @@ import { Router, Request, Response } from 'express';
 import { FeedItem } from '../models/FeedItem';
 import { requireAuth } from '../../users/routes/auth.router';
 import * as AWS from '../../../../aws';
+import { Interface } from 'readline';
+import { UpdatedAt } from 'sequelize-typescript';
 
 const router: Router = Router();
 
@@ -18,21 +20,29 @@ router.get('/', async (req: Request, res: Response) => {
 
 //@TODO
 //Add an endpoint to GET a specific resource by Primary Key
-router.get(':/id', async (req: Request, res: Response) => {
+router.get('/:id', async (req: Request, res: Response) => {
     const { id } = req.params
-    console.log(id)
-    const resource = await FeedItem.findByPk(id)
-    res.send(resource)
+    const item = await FeedItem.findByPk(id)
+    res.send(item)
 })
-
 
 // update a specific resource
 router.patch('/:id',
-    requireAuth,
+    // requireAuth,
     async (req: Request, res: Response) => {
-        //@TODO try it yourself
-        res.send(500).send("not implemented")
-    });
+        const { caption, url } = req.body
+        const { id } = req.params
+        const newParams = { caption, url }
+        if (!caption || !url) {
+            return res.status(400).send({ message: 'no caption and/or url provided' })
+        }
+        const item = await FeedItem.update(newParams, {
+            where: { id },
+            returning: true
+        })
+
+        res.send(item)
+    })
 
 
 // Get a signed url to put a new item in the bucket
