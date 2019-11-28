@@ -3,7 +3,7 @@ export const config = {
     "username": process.env.POSTGRESS_username,
     "password": process.env.POSTGRESS_password,
     "database": process.env.POSTGRESS_database,
-    "host": process.env.POSTGRESS_host || "upatrvqdb.cwyfsqhp4ite.eu-central-1.rds.amazonaws.com",
+    "host": process.env.POSTGRESS_host,
     "dialect": "postgres",
     "aws_region": process.env.AWS_region,
     "aws_profile": process.env.AWS_profilem,
