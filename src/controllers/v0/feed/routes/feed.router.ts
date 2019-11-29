@@ -2,8 +2,6 @@ import { Router, Request, Response } from 'express';
 import { FeedItem } from '../models/FeedItem';
 import { requireAuth } from '../../users/routes/auth.router';
 import * as AWS from '../../../../aws';
-import { Interface } from 'readline';
-import { UpdatedAt } from 'sequelize-typescript';
 
 const router: Router = Router();
 
@@ -28,7 +26,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 
 // update a specific resource
 router.patch('/:id',
-    // requireAuth,
+    requireAuth,
     async (req: Request, res: Response) => {
         const { caption, url } = req.body
         const { id } = req.params
@@ -40,7 +38,6 @@ router.patch('/:id',
             where: { id },
             returning: true
         })
-
         res.send(item)
     })
 
